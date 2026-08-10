@@ -1,5 +1,18 @@
-# Json Secrets
+# Data files
+data/
+*.parquet
+*.csv
 *.json
+
+# Secrets & Credentials
+secrets/
+*.json
+terraform.tfvars
+
+# Terraform internal state & provider binaries
+.terraform/
+*.tfstate
+*.tfstate.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
