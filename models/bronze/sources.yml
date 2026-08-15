@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: ecommerce_bronze
+    description: "Raw landed tables in BigQuery Bronze layer"
+    tables:
+      - name: raw_amazon_metadata
+        description: "Raw Amazon electronics metadata from GCS"
+        
