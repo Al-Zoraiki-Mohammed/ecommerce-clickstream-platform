@@ -1,3 +1,6 @@
+# Environment variables
+.env
+
 # Data files
 data/
 *.parquet
@@ -240,3 +243,9 @@ dbt_packages/
 logs/
 # end dbt Cloud content
 dbt_internal_packages/
+
+# dbt artifacts and local profiles
+/target/
+/dbt_packages/
+/logs/
+profiles/profiles.yml
