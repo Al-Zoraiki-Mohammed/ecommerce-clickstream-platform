@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: ecommerce-sentiment-platform
+    schema: raw_data
+    tables:
+      - name: raw_metadata
+        description: "Raw Amazon product metadata Parquet files from GCS"
+        columns:
+          - name: parent_asin
+            tests:
+              - not_null
+      - name: raw_reviews
+        description: "Raw Amazon customer reviews Parquet files from GCS"
+        columns:
+          - name: rating
+            tests:
+              - not_null
+              

@@ -249,3 +249,6 @@ dbt_internal_packages/
 /dbt_packages/
 /logs/
 profiles/profiles.yml
+
+# OS generated files
+.DS_Store
