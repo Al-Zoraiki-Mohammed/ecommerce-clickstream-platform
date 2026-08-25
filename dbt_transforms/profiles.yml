@@ -1,0 +1,13 @@
+dbt_transforms:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: raw_staging
+      threads: 4
+      timeout_seconds: 300
+      location: EU
+      
