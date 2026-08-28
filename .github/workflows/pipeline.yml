@@ -2,7 +2,7 @@ name: Ecommerce Data Platform Pipeline
 
 on:
   push:
-    branches: [ main, phase2/automation ]
+    branches: [ main, 'feature/**', 'fix/**' ]
   pull_request:
     branches: [ main ]
   schedule:
