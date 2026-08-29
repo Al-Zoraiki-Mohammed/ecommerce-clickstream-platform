@@ -9,5 +9,5 @@ dbt_transforms:
       dataset: raw_staging
       threads: 4
       timeout_seconds: 300
-      location: EU
+      location: europe-west1
       
