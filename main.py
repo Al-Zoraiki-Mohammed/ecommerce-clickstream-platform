@@ -1,9 +1,9 @@
 import os
 from scripts.extract_data import extract_reviews_to_parquet, extract_metadata_to_parquet
-from scripts.load_to_gcs import upload_bytes_to_gcs
+from scripts.load_data import upload_bytes_to_gcs
 from dotenv import load_dotenv
 from scripts.extract_data import  extract_metadata_to_parquet
-from scripts.load_to_gcs import upload_bytes_to_gcs
+from scripts.load_data import upload_bytes_to_gcs
 
 
 category_name = "All_Beauty" # Change this to the desired category for extraction

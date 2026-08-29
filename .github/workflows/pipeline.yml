@@ -2,7 +2,7 @@ name: Ecommerce Data Platform Pipeline
 
 on:
   push:
-    branches: [ main, phase2/automation ]
+    branches: [ main, 'feature/**', 'fix/**' ]
   pull_request:
     branches: [ main ]
   schedule:
@@ -40,6 +40,14 @@ jobs:
       - name: Install Project Dependencies
         run: |
           uv sync
+
+      - name: Run Data Ingestion to GCS
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          uv run python scripts/extract_data.py
+          uv run python scripts/load_data.py
 
       - name: Run dbt Transformations & Data Tests
         env:
