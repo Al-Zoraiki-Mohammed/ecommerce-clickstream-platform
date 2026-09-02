@@ -17,6 +17,9 @@ select
     r.review_text,
     r.review_timestamp,
     r.helpful_votes,
-    r.is_verified_purchase
+    r.is_verified_purchase,
+    -- ML Sentiment Enrichment Fields
+    r.sentiment_label,
+    r.sentiment_score
 from reviews r
 left join products p on r.parent_asin = p.parent_asin

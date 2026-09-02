@@ -18,44 +18,55 @@ def ensure_dataset_exists(client: bigquery.Client, dataset_id: str):
     print(f"Dataset '{dataset_ref}' is ready.")
 
 
-def create_external_table(client: bigquery.Client, table_id: str, gcs_uri: str):
-    """Creates or replaces a BigQuery External Table pointing to GCS Parquet files."""
-    full_table_id = f"{GCP_PROJECT_ID}.{DATASET_ID}.{table_id}"
-
-    table = bigquery.Table(full_table_id)
-    external_config = bigquery.ExternalConfig("PARQUET")
-    external_config.source_uris = [gcs_uri]
-    
-    # Auto-detect schema directly from Parquet file footers
-    external_config.autodetect = True
-    table.external_data_configuration = external_config
-
-    table = client.create_table(table, exists_ok=True)
-    print(f"External table '{full_table_id}' configured -> {gcs_uri}")
-
-
 def main():
     client = bigquery.Client(project=GCP_PROJECT_ID)
-
-    # 1. Ensure target raw dataset exists
     ensure_dataset_exists(client, DATASET_ID)
 
-    # 2. External Table: Raw Reviews (scans all category reviews Parquet files)
-    create_external_table(
-        client=client,
-        table_id="raw_reviews",
-        gcs_uri=f"gs://{GCS_BUCKET_NAME}/raw/reviews/*.parquet"
-    )
+    # 1. Historical Static Baseline Table
+    baseline_table_id = f"{GCP_PROJECT_ID}.{DATASET_ID}.raw_reviews_baseline"
+    client.delete_table(baseline_table_id, not_found_ok=True)
+    
+    baseline_table = bigquery.Table(baseline_table_id)
+    config_baseline = bigquery.ExternalConfig("PARQUET")
+    config_baseline.source_uris = [f"gs://{GCS_BUCKET_NAME}/raw/reviews/*.parquet"]
+    config_baseline.autodetect = True
+    baseline_table.external_data_configuration = config_baseline
+    client.create_table(baseline_table)
+    print(f"Created external table: {baseline_table_id}")
 
-    # 3. External Table: Raw Metadata (scans all category metadata Parquet files)
-    create_external_table(
-        client=client,
-        table_id="raw_metadata",
-        gcs_uri=f"gs://{GCS_BUCKET_NAME}/raw/metadata/*.parquet"
-    )
+    # 2. Daily Hive-Partitioned Delta Table
+    delta_table_id = f"{GCP_PROJECT_ID}.{DATASET_ID}.raw_reviews_delta"
+    client.delete_table(delta_table_id, not_found_ok=True)
+    
+    delta_table = bigquery.Table(delta_table_id)
+    config_delta = bigquery.ExternalConfig("PARQUET")
+    config_delta.source_uris = [f"gs://{GCS_BUCKET_NAME}/raw/reviews_delta/*"]
+    config_delta.autodetect = True
 
-    print("\nExternal table setup completed successfully!")
+    hive_options = bigquery.HivePartitioningOptions()
+    hive_options.mode = "AUTO"
+    hive_options.source_uri_prefix = f"gs://{GCS_BUCKET_NAME}/raw/reviews_delta/"
+    config_delta.hive_partitioning = hive_options
+
+    delta_table.external_data_configuration = config_delta
+    client.create_table(delta_table)
+    print(f"Created external table: {delta_table_id}")
+
+    # 3. Static Metadata External Table
+    metadata_table_id = f"{GCP_PROJECT_ID}.{DATASET_ID}.raw_metadata"
+    client.delete_table(metadata_table_id, not_found_ok=True)
+
+    metadata_table = bigquery.Table(metadata_table_id)
+    config_metadata = bigquery.ExternalConfig("PARQUET")
+    config_metadata.source_uris = [f"gs://{GCS_BUCKET_NAME}/raw/metadata/*.parquet"]
+    config_metadata.autodetect = True
+    metadata_table.external_data_configuration = config_metadata
+    client.create_table(metadata_table)
+    print(f"Created external table: {metadata_table_id}")
+
+    print("\nAll external tables created successfully!")
 
 
 if __name__ == "__main__":
     main()
+    

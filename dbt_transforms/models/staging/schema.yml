@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: ecommerce-sentiment-platform
+    tables:
+      - name: raw_reviews_baseline
+      - name: raw_reviews_delta
+      - name: raw_metadata
+      

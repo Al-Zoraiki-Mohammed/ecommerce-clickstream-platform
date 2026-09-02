@@ -18,4 +18,6 @@ dependencies = [
     "pyarrow>=25.0.0",
     "python-dotenv>=1.2.3",
     "streamlit>=1.59.1",
+    "torch>=2.13.0",
+    "transformers>=5.16.1",
 ]
