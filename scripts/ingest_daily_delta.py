@@ -95,7 +95,7 @@ def generate_realistic_daily_deltas(catalog_asins: list[str], num_reviews: int =
 
 def main():
     catalog_asins = fetch_active_asins_from_bigquery()
-    df = generate_realistic_daily_deltas(catalog_asins, num_reviews=100)
+    df = generate_realistic_daily_deltas(catalog_asins, num_reviews=5)
 
     print(f"Running DistilBERT sentiment inference on {len(df)} daily delta reviews...")
     analyzer = SentimentAnalyzer()
