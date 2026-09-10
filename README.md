@@ -39,7 +39,7 @@ An end-to-end production data engineering platform built on Google Cloud Platfor
 | **Package & Environment Control** | **Python 3.11** & **`uv`** | Fast dependency resolution and local virtual environment management |
 | **CI/CD & Orchestration** | **GitHub Actions** | Scheduled daily pipeline automation (`cron`) with service account authentication |
 | **Incident Monitoring & Alerts** | **Discord Webhooks** | Real-time structured alert dispatch for flagged product anomalies |
-| **Visualization** | **Looker Studio** | Executive KPI scorecards, anomaly action grids, and review drill-downs |
+| **Visualization** | **Looker(Data) Studio** | Executive KPI scorecards, anomaly action grids, and review drill-downs |
 
 ---
 
@@ -54,7 +54,7 @@ The transformation layer follows the Medallion Data Architecture (Bronze/Silver/
   * Serves as the clean silver model containing sentiment labels, star ratings, and review metadata across 45,000+ records.
 * **Gold Analytics Layer (`gold_sentiment_shifts`):**
   * Aggregates reviews across 23,000+ unique product ASINs.
-  * Computes historical baseline positivity vs. recent 7-day delta positivity.
+  * Computes historical baseline positivity vs. recent delta positivity.
   * Dynamically calculates `sentiment_shift_index` and evaluates anomaly flags:
     $$\text{is\_negative\_anomaly} = \text{TRUE} \quad \text{if} \quad \text{sentiment\_shift\_index} \le -0.20$$
 
@@ -99,6 +99,7 @@ uv run dbt run
 uv run dbt test
 cd ..
 
+```
 # Step 4: Dispatch Discord Anomaly Alerts
 PYTHONPATH=. uv run python scripts/send_alerts.py
 
@@ -111,7 +112,25 @@ GCP_PROJECT_ID: Your GCP Project ID (ecommerce-sentiment-platform).
 DISCORD_WEBHOOK_URL: Your Discord channel webhook endpoint.
 
 📊 Dashboard & Monitoring
-The Looker Studio dashboard connects directly to analytics.gold_sentiment_shifts and analytics.fct_reviews:
+The Data Studio dashboard connects directly to analytics.gold_sentiment_shifts and analytics.fct_reviews:
 Executive KPI Scorecards: Monitors Total Flagged Anomalies, Avg Baseline Positivity, and Avg Recent Positivity (scoped with is_negative_anomaly = true).
 Anomaly Action Grid: Heatmap table highlighting products experiencing severe sentiment drops.
 Review Text Inspection Grid: Cross-filtered drill-down table to review individual feedback driving negative surges.
+
+
+## 📊 Interactive Analytics Dashboard
+
+Access the live interactive report here:  
+👉 **[View Live Sentiment Dashboard on Looker Studio](https://datastudio.google.com/reporting/2c4daf36-0742-4fb0-81b3-eadbf5e8aa13)**
+
+[![Looker Studio Dashboard Preview](docs/images/looker_dashboard_preview.png)](https://datastudio.google.com/reporting/2c4daf36-0742-4fb0-81b3-eadbf5e8aa13)
+
+* **Executive KPI Scorecards:** Monitors Total Flagged Anomalies, Avg Baseline Positivity, and Avg Recent Positivity (scoped to `is_negative_anomaly = true`).
+* **Anomaly Action Grid:** Heatmap table highlighting products experiencing severe sentiment drops.
+* **Review Text Inspection Grid:** Cross-filtered drill-down table to review individual feedback driving negative surges.
+
+### 🔔 Real-Time Incident Alerts
+
+When a product experiences a $\ge 20\%$ drop in sentiment, an automated alert card is dispatched directly to Discord:
+
+![Discord Sentiment Alert](docs/images/discord_alert_preview.png)
