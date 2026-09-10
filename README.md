@@ -1,6 +1,6 @@
 # 🛒 Real-Time E-Commerce Sentiment Intelligence & Anomaly Platform
 
-An end-to-end production data engineering platform built on Google Cloud Platform (GCP), dbt, and HuggingFace DistilBERT. The system automates daily review ingestion, runs ML sentiment inference, flags negative sentiment anomalies ($\ge 20\%$ drop in positivity), dispatches automated alerts to Discord, and visualizes trends in Looker Studio.
+An end-to-end production data engineering platform built on Google Cloud Platform (GCP), dbt, and HuggingFace DistilBERT. The system automates daily review ingestion, runs ML sentiment inference, flags negative sentiment anomalies ($\ge 20\%$ drop in positivity), dispatches automated alerts to Discord, and visualizes trends in Data Studio.
 
 ---
 
@@ -92,9 +92,10 @@ uv run dbt run
 uv run dbt test
 cd ..
 
-```
 # Step 4: Dispatch Discord Anomaly Alerts
 PYTHONPATH=. uv run python scripts/send_alerts.py
+
+```
 
 🤖 CI/CD Automation (GitHub Actions)
 
