@@ -6,28 +6,21 @@ An end-to-end production data engineering platform built on Google Cloud Platfor
 
 ## 🏗️ System Architecture
 
-┌────────────────────────────────────────┐
-                           │     GitHub Actions (Daily Cron)         │
-                           └──────────────────┬─────────────────────┘
-                                              │
-                                              ▼┌───────────────────────┐            ┌──────────────────────────┐            ┌───────────────────────┐
-│ Amazon Customer Data  │ ──(Python)─►   Google Cloud Storage   │ ──(BigQuery)►  BigQuery External     │
-│  (Baseline + Delta)   │  DistilBERT│ raw/reviews_delta/y/m/d│   Tables   │   Raw Data Layer      │
-└───────────────────────┘            └──────────────────────────┘            └───────────────────────┘
-│
-▼
-┌───────────────────────┐            ┌──────────────────────────┐            ┌───────────────────────┐
-│ Discord Webhook Alert │ ◄─(Python)─│   BigQuery Analytics     │ ◄──(dbt Core)─│  dbt Data Transformations
-│   (#alerts-sentiment) │            │  gold_sentiment_shifts │            │ (Staging & Fact Models)│
-└───────────────────────┘            └──────────────────────────┘            └───────────────────────┘
-│
-▼
-┌──────────────────────────┐
-│  Looker Studio Dashboard │
-│  (Visual Sentiment Grids)│
-└──────────────────────────┘
+```mermaid
+flowchart TD
+    A[Amazon Customer Data<br/>Baseline + Delta] -->|Python + DistilBERT| B[Google Cloud Storage<br/>raw/reviews_delta/y/m/d]
+    B -->|Schema Auto-Detect| C[BigQuery External Tables<br/>Raw Data Layer]
+    C -->|dbt Run| D[dbt Transformations<br/>Staging & Fact Models]
+    D -->|Materialize| E[BigQuery Analytics<br/>gold_sentiment_shifts]
+    E -->|Python Query| F[Discord Webhook Alerts<br/>#alerts-sentiment]
+    E -->|Live Connector| G[Looker Studio Dashboard<br/>Visual Sentiment Grids]
 
----
+    subgraph Orchestration
+        H[GitHub Actions Daily Cron] --> A
+        H --> D
+        H --> F
+    end
+```
 
 ## 🧰 Tech Stack
 
@@ -56,7 +49,7 @@ The transformation layer follows the Medallion Data Architecture (Bronze/Silver/
   * Aggregates reviews across 23,000+ unique product ASINs.
   * Computes historical baseline positivity vs. recent delta positivity.
   * Dynamically calculates `sentiment_shift_index` and evaluates anomaly flags:
-    $$\text{is\_negative\_anomaly} = \text{TRUE} \quad \text{if} \quad \text{sentiment\_shift\_index} \le -0.20$$
+    **`is_negative_anomaly`** = `TRUE` if **`sentiment_shift_index`** $\le -0.20$
 
 ---
 
