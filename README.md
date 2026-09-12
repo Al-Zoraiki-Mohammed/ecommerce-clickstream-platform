@@ -1,6 +1,6 @@
-# 🛒 Real-Time E-Commerce Sentiment Intelligence & Anomaly Platform
+# 🛒 Daily E-Commerce Sentiment Intelligence & Anomaly Platform
 
-An end-to-end production data engineering platform built on Google Cloud Platform (GCP), dbt, and HuggingFace DistilBERT. The system automates daily review ingestion, runs ML sentiment inference, flags negative sentiment anomalies ($\ge 20\%$ drop in positivity), dispatches automated alerts to Discord, and visualizes trends in Data Studio.
+An end-to-end production data engineering platform built on Google Cloud Platform (GCP), dbt, and HuggingFace DistilBERT. The system automates daily review delta ingestion, runs ML sentiment inference, flags negative sentiment anomalies ($\ge 20\%$ drop in positivity), dispatches automated alerts to Discord, and visualizes trends in Looker Studio.
 
 ---
 
@@ -20,7 +20,7 @@ flowchart TD
         H --> D
         H --> F
     end
-```
+  ```
 
 ## 🧰 Tech Stack
 
@@ -55,14 +55,14 @@ The transformation layer follows the Medallion Data Architecture (Bronze/Silver/
 
 ## 🚀 Local Setup & Installation
 
-### Prerequisites
+###  Prerequisites
 
 * Python $\ge 3.11$
 * [`uv`](https://github.com/astral-sh/uv) package manager installed
 * Google Cloud Platform project with GCS and BigQuery APIs enabled
 * GCP Service Account Key JSON with BigQuery Admin and Storage Admin roles
 
-### 1. Repository Setup
+###  Repository Setup
 
 ```bash
 git clone [https://github.com/YOUR_USERNAME/ecommerce-clickstream-platform.git](https://github.com/YOUR_USERNAME/ecommerce-clickstream-platform.git)
@@ -72,9 +72,9 @@ uv sync
 2. Environment Variables
 Create a .env file in the project root:
 
-GCP_PROJECT_ID="ecommerce-sentiment-platform"
+GCP_PROJECT_ID="your-gcp-project-id"
 GCS_BUCKET_NAME="your-gcs-bucket-name"
-DISCORD_WEBHOOK_URL="[https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN](https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN)"
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN"
 GOOGLE_APPLICATION_CREDENTIALS="path/to/gcp-key.json"
 
 3. Pipeline Execution
@@ -97,19 +97,13 @@ PYTHONPATH=. uv run python scripts/send_alerts.py
 
 ```
 
-🤖 CI/CD Automation (GitHub Actions)
+## 🤖 CI/CD Automation (GitHub Actions)
 
 The platform runs automatically on a scheduled daily cron (0 6 * * *) via .github/workflows/daily_pipeline.yml.
-To enable automation in your repository, configure the following secrets under Settings → Secrets and variables → Actions:
-GCP_SA_KEY: Content of your GCP Service Account JSON key.
-GCP_PROJECT_ID: Your GCP Project ID (ecommerce-sentiment-platform).
-DISCORD_WEBHOOK_URL: Your Discord channel webhook endpoint.
-
-📊 Dashboard & Monitoring
-The Data Studio dashboard connects directly to analytics.gold_sentiment_shifts and analytics.fct_reviews:
-Executive KPI Scorecards: Monitors Total Flagged Anomalies, Avg Baseline Positivity, and Avg Recent Positivity (scoped with is_negative_anomaly = true).
-Anomaly Action Grid: Heatmap table highlighting products experiencing severe sentiment drops.
-Review Text Inspection Grid: Cross-filtered drill-down table to review individual feedback driving negative surges.
+To enable automation in your repository, configure the following secrets under **Settings** → **Secrets** and **variables** → **Actions**:
+* GCP_SA_KEY: Content of your GCP Service Account JSON key.
+* GCP_PROJECT_ID: Your GCP Project ID (ecommerce-sentiment-platform).
+* DISCORD_WEBHOOK_URL: Your Discord channel webhook endpoint.
 
 
 ## 📊 Interactive Analytics Dashboard
@@ -128,3 +122,6 @@ Access the live interactive report here:
 When a product experiences a $\ge 20\%$ drop in sentiment, an automated alert card is dispatched directly to Discord:
 
 ![Discord Sentiment Alert](docs/images/discord_alert_preview.png)
+
+
+**Good Luck !** 
