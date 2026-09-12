@@ -20,6 +20,7 @@ flowchart TD
         H --> D
         H --> F
     end
+  ```
 
 ## 🧰 Tech Stack
 
