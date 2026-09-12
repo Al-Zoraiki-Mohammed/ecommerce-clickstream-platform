@@ -55,14 +55,14 @@ The transformation layer follows the Medallion Data Architecture (Bronze/Silver/
 
 ## 🚀 Local Setup & Installation
 
-### Prerequisites
+###  Prerequisites
 
 * Python $\ge 3.11$
 * [`uv`](https://github.com/astral-sh/uv) package manager installed
 * Google Cloud Platform project with GCS and BigQuery APIs enabled
 * GCP Service Account Key JSON with BigQuery Admin and Storage Admin roles
 
-### 1. Repository Setup
+###  Repository Setup
 
 ```bash
 git clone [https://github.com/YOUR_USERNAME/ecommerce-clickstream-platform.git](https://github.com/YOUR_USERNAME/ecommerce-clickstream-platform.git)
@@ -122,3 +122,6 @@ Access the live interactive report here:
 When a product experiences a $\ge 20\%$ drop in sentiment, an automated alert card is dispatched directly to Discord:
 
 ![Discord Sentiment Alert](docs/images/discord_alert_preview.png)
+
+
+**Good Luck !** 
