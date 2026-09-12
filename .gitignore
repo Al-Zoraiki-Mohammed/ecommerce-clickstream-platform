@@ -252,3 +252,17 @@ profiles/profiles.yml
 
 # OS generated files
 .DS_Store
+
+# Ignore Terraform state files containing internal infrastructure details
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ignore secret variable inputs
+terraform.tfvars
+*.auto.tfvars
+
+# Ignore temporary import generation files
+imports.tf
+generated_resources.tf
